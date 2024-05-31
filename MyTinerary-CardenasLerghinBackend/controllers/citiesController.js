@@ -1,5 +1,4 @@
-import cities from "../routers/citiesRouter.js"
-
+import cities from "../util/cities.js"
 
 const citiesController ={ 
     getAllCities: async(request, response, next) => {
@@ -12,13 +11,15 @@ const citiesController ={
 
     },
     getOneCity: async(request, response, next) => {
+        const {name}= request.params
+        const city= cities.find(city => city.name== name)
         response.json({
-            
-            response: cities[0],
+       
+            response: city,
             succes: true,
             error:null
         })
-
+  
     }
 }
 
