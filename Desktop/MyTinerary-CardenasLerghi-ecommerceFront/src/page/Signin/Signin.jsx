@@ -9,7 +9,8 @@ import { GoogleLogin } from '@react-oauth/google';
 import jwtDecode from 'jwt-decode';
 
 import { login } from '../../Store/Actions/authActions';
-import { LS } from '../../Utils/LS';
+import { LS } from '../../utils/LS';
+
 
 const Signin = () => {
   const navigate = useNavigate();
@@ -24,13 +25,19 @@ const Signin = () => {
   useEffect(() => {
     const token = LS.getText('token');
     const role = LS.getText('role');
-    
-
+    console.log("Retrieved token: ", token);
+    console.log("Retrieved role: ", role);
+  
     if (token && role) {
       dispatch(login({ token, role }));
       navigate('/comprar');
+    } else if (token) {
+      console.warn('Token is available, but role is not set in local storage');
+      // Navigate to a fallback or handle accordingly
+      navigate('/home');
     }
-  }, [])
+  }, [dispatch, navigate]);
+  
 
   const handleSubmit = async () => {
     

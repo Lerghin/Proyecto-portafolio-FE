@@ -26,13 +26,19 @@ const Navbar = () => {
   }, [user]);
 
   useEffect(() => {
-    const role = LS.getText('role').trim();
-    console.log(role);
-    if (role) {
-      setUserRole(role.trim());
-      console.log(userRole)
+    try {
+      const role = LS.getText("role")?.trim();  // Handle potential null or undefined role
+      if (role) {
+        setUserRole(role);
+      } else {
+        setUserRole("GUEST");  // Set a default role if no role is found
+      }
+    } catch (error) {
+      console.error("Error fetching role:", error);
+      setUserRole("GUEST");  // Default role in case of error
     }
-  }, []);
+  }, [user]);
+
 
   return (
     <header>
