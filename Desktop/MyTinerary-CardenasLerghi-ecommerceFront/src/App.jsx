@@ -25,6 +25,7 @@ import store from "./Store/store.js";
 import Productos from "./page/Productos/Productos.jsx";
 import CreateProduct from "./page/Productos/AddProduct.jsx";
 import EditProduct from "./page/Productos/EditProduct.jsx";
+import Ventas from "./page/Ventas/Ventas.jsx";
 
 
 /*
@@ -80,6 +81,10 @@ const router = createBrowserRouter([
             {
               path: '/editProduct/:id',
               element: <EditProduct />
+            },
+            {
+              path: '/ventas',
+              element: <Ventas />
             },
            
         ]

@@ -10,7 +10,7 @@ import { API } from '../../utils/axios';
 import { storage } from '../../credenciales';
 
 const EditProduct = () => {
-  const { id } = useParams(); // Obtenemos el id del producto de los parámetros de la URL
+  const { id } = useParams();
   const navigate = useNavigate();
 
   const [productData, setProductData] = useState({
@@ -19,22 +19,20 @@ const EditProduct = () => {
     price: 0,
     stock: 0,
     thumbnail: '',
-    category: ''
+    category: '',
+    isActive: true,
   });
 
   const [imageFile, setImageFile] = useState(null);
   const [uploadProgress, setUploadProgress] = useState(0);
-  const [originalThumbnail, setOriginalThumbnail] = useState(''); // Guardamos la URL original de la imagen
+  const [originalThumbnail, setOriginalThumbnail] = useState('');
 
-  // Cargar los datos del producto existente
   useEffect(() => {
     const fetchProduct = async () => {
       try {
         const { data } = await API.get(`/products/${id}`);
-       
         setProductData(data.response);
-        console.log(data.response)
-        setOriginalThumbnail(data.thumbnail); // Guardamos la URL original de la imagen
+        setOriginalThumbnail(data.thumbnail);
       } catch (error) {
         toast.error('Error al cargar los datos del producto');
         console.error(error);
@@ -44,34 +42,30 @@ const EditProduct = () => {
     fetchProduct();
   }, [id]);
 
-  // Manejar cambios en los campos del formulario
   const handleChange = (e) => {
-    const { name, value, files } = e.target;
-    if (name === 'thumbnail' && files.length > 0) {
+    const { name, type, checked, value, files } = e.target;
+    if (type === 'file' && files.length > 0) {
       setImageFile(files[0]);
+    } else if (type === 'checkbox') {
+      setProductData({ ...productData, [name]: checked });
     } else {
       setProductData({ ...productData, [name]: value });
     }
   };
 
-  // Enviar el formulario
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
       let downloadURL = productData.thumbnail;
 
-      // Si se seleccionó una nueva imagen, subimos la nueva imagen y eliminamos la anterior
       if (imageFile) {
-        // Subir la nueva imagen a Firebase Storage
         const storageRef = ref(storage, `products/${Date.now()}_${imageFile.name}`);
         const uploadTask = uploadBytesResumable(storageRef, imageFile);
 
         uploadTask.on('state_changed',
           (snapshot) => {
-            // Calcular el progreso de la subida
             const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-            console.log('Progreso de la subida:', progress);
             setUploadProgress(progress);
 
             switch (snapshot.state) {
@@ -90,28 +84,19 @@ const EditProduct = () => {
             console.error(error);
           },
           async () => {
-            // Obtener la URL de descarga de la nueva imagen subida
             downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-            console.log('Imagen disponible en:', downloadURL);
-
-            // Eliminar la imagen anterior si existe
             if (originalThumbnail) {
               const imageRef = ref(storage, originalThumbnail);
               await deleteObject(imageRef);
-              console.log('Imagen anterior eliminada');
             }
 
-            // Actualizar el estado con la URL de la nueva imagen
             const updatedProductData = { ...productData, thumbnail: downloadURL };
-
-            // Enviar los datos actualizados del producto al backend
             await API.put(`/products/${id}`, updatedProductData);
             toast.success('Producto actualizado con éxito');
             navigate('/verProductos');
           }
         );
       } else {
-        // Enviar los datos actualizados sin cambiar la imagen
         const updatedProductData = { ...productData, thumbnail: downloadURL };
         await API.put(`/products/${id}`, updatedProductData);
         toast.success('Producto actualizado con éxito');
@@ -119,7 +104,6 @@ const EditProduct = () => {
       }
     } catch (error) {
       const message = error.response ? error.response.data.message : error.message;
-      console.error(error);
       toast.error(message);
     }
   };
@@ -217,8 +201,19 @@ const EditProduct = () => {
             </Form.Control>
           </Form.Group>
         </Row>
+        <Row className="mb-3">
+          <Form.Group as={Col} controlId="formProductIsActive" className='d-flex justify-center gap-4'>
+            <Form.Label>Estado: </Form.Label>
+            <Form.Check
+              type="checkbox"
+              name="isActive"
+              label="Activo"
+              checked={productData.isActive}
+              onChange={handleChange}
+            />
+          </Form.Group>
+        </Row>
         
-        {/* Mostrar la barra de progreso si hay progreso */}
         {uploadProgress > 0 && (
           <Row className="mb-3">
             <Col>

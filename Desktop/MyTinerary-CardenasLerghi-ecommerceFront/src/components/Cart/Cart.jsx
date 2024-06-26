@@ -5,13 +5,15 @@ import { useNavigate } from 'react-router-dom';
 import { CartIcon, ClearCartIcon } from './../Icons.jsx'
 import { useCart } from './../../hooks/useCart.js'
 
-function CartItem ({ thumbnail, price, title, quantity, addToCart }) {
+function CartItem ({ thumbnail, price, title, quantity, addToCart, stock }) {
 
 
   const totalPrice = price * quantity;
 
-  const [subTotalPrice, setSubTotalPrice] = useState(totalPrice); // Initialize state
 
+  const [subTotalPrice, setSubTotalPrice] = useState(totalPrice); // Initialize state
+ 
+  
   const handleyChange = (event) => {
     const newQuantity = Number(event.target.value);
     if (isNaN(newQuantity) || newQuantity < 0) return;
@@ -29,10 +31,10 @@ function CartItem ({ thumbnail, price, title, quantity, addToCart }) {
       </div>
 
       <footer>
-        <small>
+        <small   >
           Qty: {quantity}
         </small>
-        <button onClick={addToCart}>+</button>
+        <button onClick={addToCart} disabled={quantity >= stock}>+</button>
         <div onChange={ handleyChange}> ${totalPrice.toFixed(2)}</div>
       </footer>
     </li>

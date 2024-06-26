@@ -9,7 +9,8 @@ import { GoogleLogin } from '@react-oauth/google';
 import jwtDecode from 'jwt-decode';
 
 import { login } from '../../Store/Actions/authActions';
-import { LS } from '../../utils/LS';
+import { LS } from '../../Utils/LS';
+
 
 
 const Signin = () => {
@@ -45,7 +46,7 @@ const Signin = () => {
       email: inputEmail.current.value,
       password: inputPass.current.value,
     };
-
+    try {
     const res = await API.post('/auth/in', userData);
     const { userData: { _id } } = res.data;
     console.log(res.data);
@@ -65,7 +66,11 @@ const Signin = () => {
      
       navigate('/homeAdmin',  { state: { userId: _id } });
     
+    }  } catch (error) {
+      alert("usuario o contraseña invalida");
+      console.error(error);
     }
+
   };
  
 
@@ -85,7 +90,7 @@ const Signin = () => {
       password: 'Alicia.0609',
     };
 
-    const res = await server.post('/auth/in', userData);
+    const res = await API.post('/auth/in', userData);
     console.log(res);
     dispatch(login(res.data));
  

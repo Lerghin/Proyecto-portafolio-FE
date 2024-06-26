@@ -5,29 +5,40 @@ import { useNavigate } from 'react-router-dom';
 import { API } from '../../utils/axios';
 import { toast } from 'react-toastify';
 import { useState, useEffect } from 'react';
-import { ref, deleteObject } from "firebase/storage"; // Importa deleteObject y ref
-import { storage } from '../../credenciales'; // Asegúrate de que esto apunta a la configuración correcta de Firebase
+import axios from 'axios';
 
 export function ProductAdmin({ products }) {
   const navigate = useNavigate();
-  const [productList, setProductList] = useState(products);
+  const [productList, setProductList] = useState([]);
+  const [montoBs, setMontoBs] = useState(0);
 
-  // Función para manejar la eliminación del producto
-  const handleDelete = async (id, thumbnail) => {
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await axios.get("https://v6.exchangerate-api.com/v6/8ee293f7c8b83cfe4baa699c/latest/USD");
+        const valorDollar = res.data.conversion_rates.VES;
+        setMontoBs(valorDollar);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+    fetchData();
+  }, []);
+
+  // Función para manejar la desactivación/activación del producto
+  const handleToggleActive = async (id, isActive) => {
     try {
-      // Elimina el producto en la base de datos
-      await API.delete(`/products/${id}`);
+      // Actualizar el estado `isActive` del producto en la base de datos
+      await API.put(`/products/${id}`, { isActive: !isActive });
       
-      // Elimina la imagen en Firebase Storage
-      const imageRef = ref(storage, thumbnail);
-      await deleteObject(imageRef);
-
-      toast.success('Producto e imagen eliminados con éxito');
+      toast.success(`Producto ${!isActive ? 'activado' : 'desactivado'} con éxito`);
       
-      // Filtra el producto eliminado fuera del estado
-      setProductList(productList.filter(product => product._id !== id));
+      // Actualizar el estado local del producto
+      setProductList(productList.map(product =>
+        product._id === id ? { ...product, isActive: !isActive } : product
+      ));
     } catch (error) {
-      toast.error('Error al eliminar el producto o la imagen');
+      toast.error('Error al actualizar el estado del producto');
       console.error(error);
     }
   };
@@ -38,6 +49,7 @@ export function ProductAdmin({ products }) {
   };
 
   useEffect(() => {
+    // Actualizar la lista de productos con los recibidos como prop
     setProductList(products);
   }, [products]);
 
@@ -56,10 +68,13 @@ export function ProductAdmin({ products }) {
                   <strong>Categoría: {product.category}</strong>
                 </div>
                 <div>
-                  Precio: ${product.price}
+                  <strong>Precio en USD: </strong> {product.price} $
                 </div>
                 <div>
-                  Stock: {product.stock}
+                  <strong>Total en Bs:</strong> {(parseFloat(montoBs) * product.price).toFixed(2)} Bs
+                </div>
+                <div>
+                  <strong>Stock Disponible: </strong>{product.stock}
                 </div>
                 <div className="product-actions">
                   <button 
@@ -70,9 +85,9 @@ export function ProductAdmin({ products }) {
                   </button>
                   <button 
                     className="delete-button" 
-                    onClick={() => handleDelete(product._id, product.thumbnail)}
+                    onClick={() => handleToggleActive(product._id, product.isActive)}
                   >
-                    <MdDeleteForever /> Eliminar
+                    <MdDeleteForever /> {product.isActive ? 'Desactivar' : 'Activar'}
                   </button>
                 </div>
               </li>

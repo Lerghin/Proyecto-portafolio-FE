@@ -32,7 +32,7 @@ const Home = () => {
        
           <Main />
         </div>
-  
+          <br /> <br />
         <Products key={products._id} products={filteredProducts} />
         <Cart />
       </CartProvider>

@@ -79,7 +79,7 @@ const Navbar = () => {
                   {userRole !== 'ADMIN' && (
                     <li className="nav-item active">
                       <Link to="/comprar" className="nav-link" >
-                        Comprar
+                      Pagar
                       </Link>
                     </li>
                   )}
