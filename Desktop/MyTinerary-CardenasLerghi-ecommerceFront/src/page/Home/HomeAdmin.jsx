@@ -141,7 +141,7 @@ const HomeAdmin = () => {
             <Card.Body>
               <Card.Title>Proveedores</Card.Title>
               <Card.Text>Lista de Proveedores</Card.Text>
-              <Button onClick={() => navigate('/users')} variant="btn btn-secondary">Ver Proveedores</Button>
+              <Button onClick={() => navigate('/proveedores')} variant="btn btn-secondary">Ver Proveedores</Button>
             </Card.Body>
           </Card>
         )}

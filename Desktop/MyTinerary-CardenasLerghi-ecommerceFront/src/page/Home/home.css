@@ -1,38 +1,21 @@
-/*
 
-.app-layout{
-    min-height: 100vh;
-    display:flex ;
-    flex-direction: column;
-    }
-    
-    .app-header, .app-footer{
-      height:10vh;
-      width: 100%;
-      
-    }
-    
-    .app-main{
-    
-    flex-grow: 1;
-  
-    }
-   
-    
-    @media (max-width: 600px) {
-      .app-footer {
-        margin-bottom: -1px;
-      }
-    }
 
     @media (max-width: 768px) {
-        .app-main{
+        .productos{
     
             flex-grow: 1;
-            margin-top: 300px
+            margin-top: 14rem;
             
             }
+
+            .imagen-card{
+
+              height: 50rem;
+
+            }
+          
+            
     }
-    */
+  
     
   

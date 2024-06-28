@@ -1,14 +1,10 @@
-import { useNavigate } from "react-router-dom";
-import { FaUserEdit } from "react-icons/fa";
-import { MdDeleteForever } from "react-icons/md";
-import { useEffect, useState } from "react";
-import { LS } from "../../utils/LS";
-import { API } from "../../utils/axios";
+
+import { Link } from 'react-router-dom';
 import './../../page/Ventas/ventas.css';  // Importa los estilos CSS
 
-const TableVent = ({ data, onDelete }) => {
+const TableVent = ({ data }) => {
   const {
-    id,
+
     nombre,
     fechaPago,
     apellido,
@@ -20,32 +16,27 @@ const TableVent = ({ data, onDelete }) => {
     montoDepositado
   } = data;
 
-  const [userRole, setUserRole] = useState(null);
+  
 
-  useEffect(() => {
-    const role = LS.getText("role");
-    if (role) {
-      setUserRole(role.trim());
-    }
-  }, []);
 
-  const navigate = useNavigate();
 
-  const handleDelete = async (id) => {
-    if (window.confirm("¿Seguro que quieres borrar la Vacante?")) {
-      try {
-        await API.delete(`/vacant/delete/${id}`);
-        onDelete(id);
-        navigate('/vacantes');
-      } catch (error) {
-        alert(error);
-      }
-    }
+
+
+  const formatDate = (dateString) => {
+    // Convierte el string de fecha a un objeto Date
+    const date = new Date(dateString);
+    // Utiliza Intl.DateTimeFormat para formatear la fecha
+    return new Intl.DateTimeFormat('es-ES', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    }).format(date);
   };
 
   return (
     <tr>
-      <td>{fechaPago}</td>
+          <td>{formatDate(fechaPago)}</td>
+          <td className="namePatient  ">  <Link   to={`/watchUser/${userId._id}`} className="link-unstyled" >{userId.email}</Link></td>
       <td>{nombre} {apellido}</td>
       <td>{cedula}</td>
       <td>
@@ -59,7 +50,7 @@ const TableVent = ({ data, onDelete }) => {
       <td>{montoDepositado}</td>
       <td>{referenciaPago}</td>
       <td>{metodoPago}</td>
-      <td>{userId.email}</td>
+     
    
     </tr>
   );

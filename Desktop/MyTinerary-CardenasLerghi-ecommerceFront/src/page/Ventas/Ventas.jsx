@@ -7,8 +7,9 @@ import { RiArrowGoBackFill } from 'react-icons/ri';
 import { useNavigate } from "react-router-dom";
 import { LS } from "../../utils/LS";
 import TableVent from "../../components/Tables/TableVent";
-import { API } from "../../utils/axios";
+
 import './ventas.css'; 
+import { API } from "../../Utils/axios";
 
 
  // Importa los estilos CSS
@@ -19,16 +20,11 @@ const Ventas = () => {
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [userRole, setUserRole] = useState(null);
+ 
   const [selectedDate, setSelectedDate] = useState(null);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const role = LS.getText("role");
-    if (role) {
-      setUserRole(role.trim());
-    }
-  }, []);
+
 
   useEffect(() => {
     const fetchVentas = async () => {
@@ -37,6 +33,7 @@ const Ventas = () => {
         const fetchedVent = response.data.response;
         setVentas(fetchedVent);
         setResults(fetchedVent);
+      
       } catch (error) {
         console.error("Error fetching Ventas:", error);
         setError(error.message);
@@ -91,18 +88,6 @@ const Ventas = () => {
     }
   };
 
-  const handleDelete = (id) => {
-    setResults((prevResults) =>
-      prevResults.filter((paciente) => paciente.id !== id)
-    );
-    setVentas((prevPacientes) =>
-      prevPacientes.filter((paciente) => paciente.id !== id)
-    );
-  };
-  const atras=()=>{
-   navigate('/homeAdmin')
-  }
-
   return (
     <div className="container">
       <div className="d-flex gap-4 w-100 my-4">
@@ -123,7 +108,8 @@ const Ventas = () => {
           placeholderText="Buscar por Fecha"
         />
       </div>
-      <Button variant="secondary" onClick={atras}>Volver</Button>
+      <Button variant="secondary" onClick={() => navigate('/homeAdmin')}>Volver</Button>
+    
 
       <div className="table-container">
         {results.length > 0 ? (
@@ -131,13 +117,14 @@ const Ventas = () => {
             <thead>
               <tr>
                 <th>Fecha</th>
+                <th>Usuario</th>
                 <th>Nombre y Apellido</th>
                 <th>Cédula</th>
                 <th>Productos</th>
-                <th>Monto Depositado por el Cliente</th>
+                <th>Monto Depositado por el Cliente  <span className="small">Nota: Si es pago movil es en Bs</span></th>
                 <th>Referencia de Pago</th>
                 <th>Método de Pago</th>
-                <th>Usuario</th>
+               
          
               </tr>
             </thead>
@@ -146,7 +133,7 @@ const Ventas = () => {
                 <TableVent
                   key={venta._id}
                   data={venta}
-                  onDelete={handleDelete}
+                  
                 />
               ))}
             </tbody>
@@ -154,9 +141,7 @@ const Ventas = () => {
         ) : (
           <div className="d-flex justify-content-center gap-5 p-4 h-100vh">
             <p>No se encontraron Ventas</p>
-            <Button onClick={() => navigate('/homeUser')} variant="secondary">
-              <RiArrowGoBackFill /> Atrás
-            </Button>
+           
           </div>
         )}
       </div>

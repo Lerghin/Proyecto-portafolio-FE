@@ -2,8 +2,9 @@ import Main from "../../components/Main/Main";
 import '../Home/home.css';
 import { useEffect, useState } from "react";
 import { useFilters } from './../../hooks/useFilters';
-import Button from 'react-bootstrap/Button';
+
 import { API } from "../../utils/axios";
+import Button from 'react-bootstrap/Button';
 import { useNavigate } from "react-router-dom";
 import { IoIosAdd } from "react-icons/io";
 import { ProductAdmin } from "../../components/Products/productAdmin";

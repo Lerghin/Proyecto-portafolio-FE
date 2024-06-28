@@ -32,9 +32,11 @@ const Home = () => {
        
           <Main />
         </div>
-          <br /> <br />
+       <div className="productos">
         <Products key={products._id} products={filteredProducts} />
+        </div>
         <Cart />
+
       </CartProvider>
     </div>
   );

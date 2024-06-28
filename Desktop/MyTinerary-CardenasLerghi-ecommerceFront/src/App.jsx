@@ -26,6 +26,13 @@ import Productos from "./page/Productos/Productos.jsx";
 import CreateProduct from "./page/Productos/AddProduct.jsx";
 import EditProduct from "./page/Productos/EditProduct.jsx";
 import Ventas from "./page/Ventas/Ventas.jsx";
+import Users from "./page/Users/User.jsx";
+import CrearAdmin from "./page/Signup/CrearAdmin.jsx";
+import CreateProveedor from "./page/Proveedores/CrearProveedor.jsx";
+import Proveedores from "./page/Proveedores/Proveedores.jsx";
+import EditProveedor from "./page/Proveedores/EditarProveedores.jsx";
+import UserSalesDetails from "./page/Users/UserSalesDetails.jsx";
+
 
 
 /*
@@ -86,6 +93,34 @@ const router = createBrowserRouter([
               path: '/ventas',
               element: <Ventas />
             },
+            {
+              path: '/users',
+              element: <Users/>
+            },
+          {
+              path: '/crearAdmin',
+              element: <CrearAdmin/>
+            },
+            {
+              path: '/crearProveedor',
+              element: <CreateProveedor/>
+            },
+            {
+              path: '/proveedores',
+              element: <Proveedores/>
+      
+            },
+            {
+              path: '/editProveedor/:id',
+              element: <EditProveedor />
+            },
+            {
+              path: '/watchUser/:id',
+              element: <UserSalesDetails />
+            },
+
+
+
            
         ]
       },
@@ -103,8 +138,6 @@ const router = createBrowserRouter([
         path: '/signUp',
         element: <SignUp />
       },
-      
-
       {
         path: '*',
         element: <Componente404 />

@@ -1,22 +1,19 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import '../Signup/signup.css';
 import { countries } from '../../data/countries';
-import { GoogleLogin } from '@react-oauth/google';
-import jwtDecode from 'jwt-decode';
-import { useDispatch } from 'react-redux';
+
 import { toast } from 'react-toastify';
 import { useState } from 'react';
 
-import { signup } from '../../Store/Actions/authActions';
 import { API } from '../../utils/axios';
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { storage } from '../../credenciales';
-import { LS } from '../../utils/LS';
 
-const SignUp = () => {
-  const dispatch = useDispatch();
+
+const CrearAdmin = () => {
+
   const navigate = useNavigate();
-  const [role, setRole]= useState("USER")
+  const [role, setRole]= useState("ADMIN")
   const [data, setData] = useState({
     name: '',
     lastName: '',
@@ -100,22 +97,10 @@ const SignUp = () => {
 
         console.log("API Response:", res.data); // Depuración
         if (res && res.data && res.status === 201) {
-          const { userData: { _id } } = res.data; // Extrae role y userId del usuario registrado
+        
+          navigate('/users');
 
-          // Si `role` es undefined, usa el `role` de `userData` en el estado
-
-          console.log("Role to be stored:", role); // Depuración
-
-          // Actualiza el localStorage con el role correcto
-          const { token } = res.data; 
-          LS.set('token', token);
-          LS.set('userID', _id);
-          LS.set('role', role);
-
-          dispatch(signup(res.data));
-          navigate('/comprar', { state: { userId: _id } });
-
-          alert("Te has registrado Satisfactoriamente, Bienvenido");
+          alert("Has registrado exitosamente el usuario");
         }
       }
     } catch (error) {
@@ -256,39 +241,14 @@ const SignUp = () => {
             required
           />
         </div>
-        <div className="google">
-          <GoogleLogin className='google'
-            clientId='302009379903-lvfvam4poqchau007anb4eqh2oshuoig.apps.googleusercontent.com'
-            onSuccess={(credentialResponse) => {
-              console.log(credentialResponse);
-              const infoUser = jwtDecode(credentialResponse.credential);
-              console.log(infoUser);
-              setData({
-                name: infoUser.given_name,
-                lastName: infoUser.family_name,
-                email: infoUser.email,
-                password: 'Alicia.0609',
-                country: infoUser.locale,
-                photo: infoUser.picture,
-                role: 'USER', // Establece un rol por defecto si es necesario
-                phone: '000000000',
-                terms: true
-              });
-            }}
-            onError={() => {
-              console.log('Login Failed');
-            }}
-            useOneTap />
-        </div>
+      
         <button type="submit" className="signup-button" disabled={isUploadingPhoto}>
           Registrar
         </button>
       </form>
-      <p>
-        Ya tienes una Cuenta? <Link to="/signin">Ingresar</Link>
-      </p>
+    
     </div>
   );
 };
 
-export default SignUp;
+export default CrearAdmin;

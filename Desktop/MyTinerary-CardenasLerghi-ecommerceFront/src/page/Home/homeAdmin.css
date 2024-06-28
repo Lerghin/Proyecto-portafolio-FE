@@ -72,10 +72,12 @@
   
   /* Media Queries para pantallas muy pequeñas */
   @media (max-width: 850px) {
+
+
     .cardIn {
-        
-      flex: 1 1 100%; /* Las tarjetas ocupan todo el ancho disponible */
-      margin: 5px; /* Reduce el margen para pantallas pequeñas */
+      display: flex;
+ 
+    margin-top: 15rem; 
    
     }
 
@@ -84,11 +86,9 @@
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
-        gap: 20px; /* Espacio entre las tarjetas */
-       /* Limita el ancho máximo del contenedor */
-     
-        margin-top: 15rem;
-         /* Centra el contenedor */
+        gap: 1rem; 
+   
+        
       }
   }
   

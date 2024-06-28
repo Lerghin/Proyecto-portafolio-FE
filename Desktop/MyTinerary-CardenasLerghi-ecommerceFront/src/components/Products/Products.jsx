@@ -54,7 +54,7 @@ export function Products({ products }) {
             return (
               <div key={product._id}>
                 <li>
-                  <img src={product.thumbnail} alt={product.name} />
+                  <img className="imagen-card" src={product.thumbnail} alt={product.name} />
                   <div style={{ fontSize: "0.9rem", whiteSpace: "pre-wrap" }}>
                     <strong>{product.name}</strong>
                   </div>
